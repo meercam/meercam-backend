@@ -2,7 +2,7 @@ import cv2
 from flask import Blueprint, Response, request, abort
 from inference import inference
 from ai_model import model
-
+import base64
 bp = Blueprint('streaming', __name__)
 
 update_frame = True
@@ -20,9 +20,27 @@ def webcam():
     # if source == None:
     #     source = 0
     is_static_file = isinstance(source, str) and (source.endswith('jpg') or source.endswith('png') or source.endswith('jpeg'))
-    data = read_cam_data(source, is_static_file)
+
+    data = None
+    if isinstance(source, str) and source.startswith('data:image'):
+        b64 = source.split(',')[1]
+        decoded = base64.decode(b64)
+        data = read_cam_data(decoded, is_static_file)
+    else:    
+        data = read_cam_data(source, is_static_file)
     if data == None: return abort(404)
     return Response(data, mimetype='multipart/x-mixed-replace; boundary=frame')
+
+def data_uri(b64):
+    frame = base64.b64decode(b64)
+    yield(b'--frame\r\n' b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+
+@bp.route('/', methods=['POST'])
+def register(): 
+    data = request.body.split(',')[1]
+    return Response(data_uri(data), mimetype='multipart/x-mixed-replace; boundary=frame')
+
+
 
 def get_capture(source):
     global capture
