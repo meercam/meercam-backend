@@ -1,8 +1,6 @@
 from flask import Blueprint
 bp = Blueprint('bot', __name__)
 
-
-
 @bp.route('/', methods=['GET'])
 def get_all_bots():
     return "get all bot"
