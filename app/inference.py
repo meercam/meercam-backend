@@ -25,7 +25,7 @@ def inference(img, model):
             if hasattr(r, 'boxes') and isinstance(r.boxes, Boxes):
                 for box in r.boxes: 
                     confidence = math.ceil((box.conf[0]*100))/100
-                    if confidence >= 0.45: 
+                    if confidence >= 0.8: 
                         x_center, y_center, width, height = box.xywh[0].tolist()
                         x = np.round((x_center - width / 2)).astype("int")
                         y = np.round((y_center - height / 2)).astype("int")

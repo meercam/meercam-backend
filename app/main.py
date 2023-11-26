@@ -65,6 +65,8 @@ def get_data(source, is_static):
 
 def read_cam_data(source, is_static : bool): 
     global update_frame
+    flag = False
+
     while True:
         frame = get_data(source, is_static)
         if frame is None: 
@@ -80,6 +82,20 @@ def read_cam_data(source, is_static : bool):
                 color = bbox.color
                 cv2.putText(frame, label, left_top, cv2.FONT_HERSHEY_SIMPLEX, 0.5, color, 2)
                 cv2.rectangle(frame, left_top, right_bottom, color, 2)
+
+            people_boxes = sorted(filter(lambda p: p.label == 'person' , bboxes), key=lambda x : x.x)
+            for i in range(len(people_boxes)):
+                for j in range(i + 1, len(people_boxes)):
+                    f = people_boxes[i].x + people_boxes[i].w - people_boxes[j].x
+                    if people_boxes[i].x / f >= 0.4:
+                        cast_alert('충돌')
+                        flag = True
+                        if flag: break
+                if flag:break
+                    
+
+                
+
         if not update_frame:
             update_frame = True
                 
