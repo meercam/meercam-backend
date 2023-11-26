@@ -1,6 +1,6 @@
 from flask import Flask
 from os import path
-from controller import bot_controller, cctv_controller, streaming_controller, websocket_controller
+from controller import bot_controller, cctv_controller, streaming_controller
 from flask_cors import CORS
 from flask_socketio import SocketIO
 
@@ -22,10 +22,17 @@ update_frame = False
 
 
 app = Flask(__name__)
-CORS(app)
+
+CORS(app, resources={r"/api/*": {"origins": "*", "supports_credentials": True}})
+
 app.config['SECRET_KEY'] = 'secret!'
 
 socketio = SocketIO(app, cors_allowed_origins="*")
+
+
+@socketio.on('alert')
+def cast_alert(msg):
+    socketio.emit('alert_listener', msg)
 
 # app.register_blueprint(websocket_controller.bp, url_prefix='/api/v1/websocket')
 app.register_blueprint(streaming_controller.bp, url_prefix='/api/v1/streaming')
@@ -62,7 +69,11 @@ def handle_streaming(data):
     frame = convert_image(data)
     video_stream(frame)
 
+@app.route('/test/<msg>')
+def trigger_alert(msg):
+    socketio.emit('alert_listener', msg)
+    return "sent"
 
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    app.run(host='0.0.0.0', port=5000, debug=True)
