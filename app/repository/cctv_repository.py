@@ -6,9 +6,8 @@ from os import path
 cur_dir = path.dirname(__file__)
 
 repository = [
-    CCTVEntity(101, '공원1', 'file', path.join(cur_dir, '..,', 'data', 'person.avi'), None, None, None),
-    CCTVEntity(102, '공원2', 'file', path.join(cur_dir, '..', 'data', 'pose.avi'), None, None, None),
-    CCTVEntity(103, '행사장1', 'file', path.join(cur_dir, '..', 'data', 'samplemp4'), None, None, None),
+    CCTVEntity(101, '공원1', 'file','/person.avi', None, None, None),
+    CCTVEntity(102, '공원2', 'file', '/pose.avi', None, None, None),
 ]
 next_id = 0
 
@@ -33,21 +32,3 @@ def find_by_id(id):
 def add_cctv(cctv):
     repository.append(cctv)
     return cctv
-
-def modify_cctv(cctv):
-    org = find_by_id(cctv.id)
-    if org is None: abort(404)
-
-    if cctv.name is not None:
-        org.name = cctv.name    
-    if cctv.scheme is not None:
-        org.scheme = cctv.scheme
-    if cctv.ip is not None:
-        org.ip = cctv.ip
-    if cctv.port is not None:
-        org.port = cctv.port
-    if cctv.username is not None:
-        org.username = cctv.username
-    if cctv.password is not None:
-        org.password = cctv.password
-    return org
