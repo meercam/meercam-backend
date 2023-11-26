@@ -1,11 +1,14 @@
 
 from flask import jsonify , abort
 from entity.cctv_entity import CCTVEntity
-import os 
+from os import path
+
+cur_dir = path.dirname(__file__)
+
 repository = [
-    CCTVEntity(101, '공원1', 'file', 0, None, None, None),
-    CCTVEntity(102, '공원2', 'file', "C:\\Users\\0____\\projects\\cv-ex\\app\\data\\sample.mp4", 554, None, None),
-    CCTVEntity(103, '행사장1', 'file', 'C:\\Users\\0____\\projects\\cv-ex\\app\\data\\datasets\\1.jpg', 554, None, None),
+    CCTVEntity(101, '공원1', 'file', path.join(cur_dir, '..,', 'data', 'person.avi'), None, None, None),
+    CCTVEntity(102, '공원2', 'file', path.join(cur_dir, '..', 'data', 'pose.avi'), None, None, None),
+    CCTVEntity(103, '행사장1', 'file', path.join(cur_dir, '..', 'data', 'samplemp4'), None, None, None),
 ]
 next_id = 0
 
@@ -18,8 +21,7 @@ def find_all():
     return repository
 
 def find_by_id(id):
-    print(type(id))
-    print('hi')
+    print("asdf")
     cctv = list(filter(lambda cctv: str(cctv.id) == id, repository))
 
     if len(cctv) == 0:

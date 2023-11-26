@@ -11,7 +11,6 @@ import base64
 from PIL import Image
 import io
 import numpy as np
-from flask import Blueprint
 
 
 last_left_top = []
@@ -24,9 +23,6 @@ update_frame = False
 app = Flask(__name__)
 
 CORS(app, resources={r"/api/*": {"origins": "*", "supports_credentials": True}})
-
-app.config['SECRET_KEY'] = 'secret!'
-
 socketio = SocketIO(app, cors_allowed_origins="*")
 
 
@@ -34,7 +30,6 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 def cast_alert(msg):
     socketio.emit('alert_listener', msg)
 
-# app.register_blueprint(websocket_controller.bp, url_prefix='/api/v1/websocket')
 app.register_blueprint(streaming_controller.bp, url_prefix='/api/v1/streaming')
 app.register_blueprint(cctv_controller.bp, url_prefix='/api/v1/cctv')
 app.register_blueprint(bot_controller.bp, url_prefix='/api/v1/bot')
@@ -73,7 +68,6 @@ def handle_streaming(data):
 def trigger_alert(msg):
     socketio.emit('alert_listener', msg)
     return "sent"
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000, debug=True)

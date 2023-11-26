@@ -81,6 +81,7 @@ def read_cam_data(source, is_static : bool):
             last_label = []
             update_frame = False
             bboxes = inference(frame, model)
+            
             for bbox in bboxes:
                 last_left_top.append((bbox.x, bbox.y))
                 last_right_bottom.append((bbox.x+bbox.w, bbox.y+bbox.h))

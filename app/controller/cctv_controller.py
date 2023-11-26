@@ -4,6 +4,7 @@ bp = Blueprint('cctv', __name__)
 from entity.cctv_entity import CCTVEntity
 @bp.route('/', methods=['GET'])
 def get_all_cctv():
+    print("안찍혀")
     return jsonify([data.__dict__ for data in find_all()])
 
 @bp.route('/<id>', methods=['GET'])
