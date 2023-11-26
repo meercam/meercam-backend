@@ -23,7 +23,6 @@ def inference(img, model):
     for r in results:
         if isinstance(r, Results):
             if hasattr(r, 'boxes') and isinstance(r.boxes, Boxes):
-
                 for box in r.boxes: 
                     confidence = math.ceil((box.conf[0]*100))/100
                     if confidence >= 0.45: 
